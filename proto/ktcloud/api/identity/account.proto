@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package ktcloud.api.identity.account;
+
+option go_package = "github.com/choonho/ktcloudapis/ktcloud/api/identity/account";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+// Account 정의
+service Accounts {
+  rpc CreateAccount (CreateAccountRequest) returns (CreateAccountResponse) {
+    option (google.api.http) = {
+        post: "/v3/accounts"
+        };
+    }
+  rpc GetAccount (GetAccountRequest) returns (GetAccountResponse) {
+    option (google.api.http) = {
+        get: "/v3/accounts/{account_id}"
+        };
+    }
+  rpc ListAccounts (ListAccountsRequest) returns (ListAccountsResponse) {
+    option (google.api.http) = {
+        get: "/v3/accounts"
+        };
+    }
+  rpc DeleteAccount (DeleteAccountRequest) returns (DeleteAccountResponse) {
+    option (google.api.http) = {
+        delete: "/v3/accounts/{account_id}"
+        };
+    }
+}
+
+// Account 데이터 모델
+message Account {
+  string account_id = 1;
+  string email = 2;
+  string name = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+  AccountStatus status = 6;
+}
+
+enum AccountStatus {
+  ACTIVE = 0;
+  INACTIVE = 1;
+  SUSPENDED = 2;
+}
+
+// 계정 생성 요청 및 응답
+message CreateAccountRequest {
+  string email = 1;
+}
+
+message CreateAccountResponse {
+  Account account = 1;
+}
+
+// 계정 조회 요청 및 응답
+message GetAccountRequest {
+  string account_id = 1;
+}
+
+message GetAccountResponse {
+  Account account = 1;
+}
+
+// 계정 목록 조회 요청 및 응답
+message ListAccountsRequest {}
+
+message ListAccountsResponse {
+  repeated Account accounts = 1;
+}
+
+// 계정 삭제 요청 및 응답
+message DeleteAccountRequest {
+  string account_id = 1;
+}
+
+message DeleteAccountResponse {
+  bool success = 1;
+}
